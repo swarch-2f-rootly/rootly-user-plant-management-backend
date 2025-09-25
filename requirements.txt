@@ -1,0 +1,19 @@
+fastapi==0.110.0
+uvicorn[standard]==0.29.0
+
+# DB
+sqlalchemy==2.0.29
+psycopg2-binary==2.9.9
+
+# Auth/JWT
+python-jose[cryptography]==3.3.0
+
+# Alembic para migraciones
+alembic==1.13.1
+
+# Pydantic para validaciones
+pydantic==2.7.1
+
+# Testing
+pytest==8.1.1
+httpx==0.27.0
