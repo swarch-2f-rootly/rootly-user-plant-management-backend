@@ -7,7 +7,7 @@ from uuid import UUID
 class DeviceAssociationRequest(BaseModel):
     microcontroller_id: UUID
     plant_id: Optional[UUID] = None
-    role: str = Field(default="viewer", regex="^(owner|editor|viewer)$")
+    role: str = Field(default="viewer", pattern="^(owner|editor|viewer)$")
 
 class DeviceUpdateRequest(BaseModel):
     location: Optional[str] = None
