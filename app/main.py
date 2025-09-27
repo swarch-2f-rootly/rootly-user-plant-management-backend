@@ -1,5 +1,6 @@
+
 from fastapi import FastAPI
-from app.routers import devices
+from app.adapters.handlers import device_handler
 
 # Inicializamos app
 app = FastAPI(
@@ -9,7 +10,7 @@ app = FastAPI(
 )
 
 # Incluir routers
-app.include_router(devices.router)
+app.include_router(device_handler.router)
 
 # Healthcheck básico
 @app.get("/health")
