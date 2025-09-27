@@ -1,4 +1,5 @@
-from app import models, crud
+from src.adapters.repositories import models
+import src.crud as crud
 
 def test_permission_levels(db_session):
     # Creamos device y asociaciones

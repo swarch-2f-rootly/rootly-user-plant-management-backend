@@ -2,10 +2,10 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.database import Base, get_db
-from app.main import app
+from src.database import Base, get_db
+from src.main import app
 from sqlalchemy import text
-from app.database import engine
+from src.database import engine
 
 
 # Usamos SQLite en memoria para tests
@@ -53,6 +53,6 @@ def client():
 def token_user_owner(monkeypatch):
     def fake_current_user():
         return {"user_id": "user-1", "roles": []}
-    from app import auth
+    import src.auth as auth
     monkeypatch.setattr(auth, "get_current_user", lambda: {"user_id": "user-1", "roles": []})
     return {"Authorization": "Bearer faketoken"}

@@ -1,4 +1,4 @@
-from app import models
+from src.adapters.repositories import models
 
 def seed_device_and_assoc(db_session, user_id="user-1"):
     device = models.Microcontroller(id="dev-1", unique_id="UID123", type="ESP32")
