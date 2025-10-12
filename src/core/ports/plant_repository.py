@@ -60,3 +60,11 @@ class PhysicalDeviceRepository(ABC):
     @abstractmethod
     async def remove_device_from_plant(self, plant_id: uuid.UUID, device_id: uuid.UUID) -> None:
         pass
+
+    @abstractmethod
+    async def get_devices_by_user_id(self, user_id: uuid.UUID) -> List[PhysicalDevice]:
+        pass
+
+    @abstractmethod
+    async def get_device_by_id_and_user(self, device_id: uuid.UUID, user_id: uuid.UUID) -> Optional[PhysicalDevice]:
+        pass

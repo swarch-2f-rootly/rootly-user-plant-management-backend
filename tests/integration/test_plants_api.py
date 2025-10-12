@@ -87,8 +87,9 @@ async def test_assign_device_to_plant(client: AsyncClient):
     })
     plant_id = plant_response.json()["id"]
 
-    # Create a device
+    # Create a device (owned by user1)
     device_response = await client.post("/api/v1/devices/", json={
+        "user_id": user_id,
         "name": "Test Device",
         "description": "Test microcontroller",
         "category": "microcontroller"
@@ -118,8 +119,9 @@ async def test_remove_device_from_plant(client: AsyncClient):
     })
     plant_id = plant_response.json()["id"]
 
-    # Create a device
+    # Create a device (owned by user1)
     device_response = await client.post("/api/v1/devices/", json={
+        "user_id": user_id,
         "name": "Test Device",
         "description": "Test microcontroller",
         "category": "microcontroller"

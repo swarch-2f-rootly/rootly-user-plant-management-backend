@@ -30,7 +30,7 @@ class PhysicalDeviceBase(BaseModel):
     category: PhysicalDeviceCategory
 
 class PhysicalDeviceCreate(PhysicalDeviceBase):
-    pass
+    user_id: uuid.UUID
 
 class PhysicalDeviceUpdate(BaseModel):
     name: str | None = None
@@ -42,5 +42,6 @@ class PhysicalDeviceResponse(PhysicalDeviceBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: uuid.UUID
+    user_id: uuid.UUID
     created_at: datetime
     updated_at: datetime

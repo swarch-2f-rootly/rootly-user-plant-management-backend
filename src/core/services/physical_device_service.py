@@ -7,9 +7,9 @@ class PhysicalDeviceService:
     def __init__(self, device_repository: PhysicalDeviceRepository):
         self.device_repository = device_repository
 
-    async def create_device(self, name: str, description: Optional[str] = None,
+    async def create_device(self, user_id: uuid.UUID, name: str, description: Optional[str] = None,
                           version: Optional[str] = None, category: str = "microcontroller") -> PhysicalDevice:
-        device = PhysicalDevice(name=name, description=description, version=version, category=category)
+        device = PhysicalDevice(user_id=user_id, name=name, description=description, version=version, category=category)
         return await self.device_repository.create_device(device)
 
     async def get_device_by_id(self, device_id: uuid.UUID) -> Optional[PhysicalDevice]:
@@ -18,10 +18,10 @@ class PhysicalDeviceService:
     async def get_all_devices(self) -> List[PhysicalDevice]:
         return await self.device_repository.get_all_devices()
 
-    async def update_device(self, device_id: uuid.UUID, name: str,
+    async def update_device(self, user_id: uuid.UUID, device_id: uuid.UUID, name: str,
                           description: Optional[str] = None, version: Optional[str] = None,
                           category: Optional[str] = None) -> Optional[PhysicalDevice]:
-        device = await self.device_repository.get_device_by_id(device_id)
+        device = await self.device_repository.get_device_by_id_and_user(device_id, user_id)
         if device:
             device.name = name
             if description is not None:
@@ -33,8 +33,12 @@ class PhysicalDeviceService:
             return await self.device_repository.update_device(device)
         return None
 
-    async def delete_device(self, device_id: uuid.UUID) -> None:
-        return await self.device_repository.delete_device(device_id)
+    async def delete_device(self, user_id: uuid.UUID, device_id: uuid.UUID) -> None:
+        # Verify ownership before deletion
+        device = await self.device_repository.get_device_by_id_and_user(device_id, user_id)
+        if device:
+            return await self.device_repository.delete_device(device_id)
+        return None
 
     async def get_devices_by_plant_id(self, plant_id: uuid.UUID) -> List[PhysicalDevice]:
         return await self.device_repository.get_devices_by_plant_id(plant_id)
@@ -44,3 +48,11 @@ class PhysicalDeviceService:
 
     async def remove_device_from_plant(self, plant_id: uuid.UUID, device_id: uuid.UUID) -> None:
         return await self.device_repository.remove_device_from_plant(plant_id, device_id)
+
+    async def get_devices_by_user_id(self, user_id: uuid.UUID) -> List[PhysicalDevice]:
+        """Get all devices owned by a specific user"""
+        return await self.device_repository.get_devices_by_user_id(user_id)
+
+    async def get_device_by_id_and_user(self, device_id: uuid.UUID, user_id: uuid.UUID) -> Optional[PhysicalDevice]:
+        """Get a device by ID only if it belongs to the specified user"""
+        return await self.device_repository.get_device_by_id_and_user(device_id, user_id)

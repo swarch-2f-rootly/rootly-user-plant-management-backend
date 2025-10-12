@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import delete, insert
 from src.core.domain.plant import PhysicalDevice as PhysicalDeviceDomain
-from src.adapters.repositories.models import PhysicalDevice as PhysicalDeviceModel, PlantPhysicalDevice
+from src.adapters.repositories.models import PhysicalDevice as PhysicalDeviceModel, PlantPhysicalDevice, Plant as PlantModel
 from src.core.ports.plant_repository import PhysicalDeviceRepository
 
 class PhysicalDeviceRepositoryImpl(PhysicalDeviceRepository):
@@ -71,3 +71,20 @@ class PhysicalDeviceRepositoryImpl(PhysicalDeviceRepository):
             )
         )
         await self.session.commit()
+
+    async def get_devices_by_user_id(self, user_id: uuid.UUID) -> List[PhysicalDeviceDomain]:
+        """Get all devices owned by a specific user"""
+        result = await self.session.execute(select(PhysicalDeviceModel).where(PhysicalDeviceModel.user_id == user_id))
+        devices = result.scalars().all()
+        return [PhysicalDeviceDomain.model_validate(device) for device in devices]
+
+    async def get_device_by_id_and_user(self, device_id: uuid.UUID, user_id: uuid.UUID) -> Optional[PhysicalDeviceDomain]:
+        """Get a device by ID only if it belongs to the specified user"""
+        result = await self.session.execute(
+            select(PhysicalDeviceModel).where(
+                PhysicalDeviceModel.id == device_id,
+                PhysicalDeviceModel.user_id == user_id
+            )
+        )
+        device = result.scalar_one_or_none()
+        return PhysicalDeviceDomain.model_validate(device) if device else None
