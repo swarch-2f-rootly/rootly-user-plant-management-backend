@@ -11,6 +11,7 @@ class PhysicalDevice(Base):
     __tablename__ = "physical_devices"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), nullable=False)  # Owner of the device (mandatory)
     name = Column(String(100), nullable=False)
     description = Column(Text)
     version = Column(String(50))
