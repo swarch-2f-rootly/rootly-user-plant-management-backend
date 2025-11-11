@@ -107,7 +107,7 @@ async def get_photo(plant_id: uuid.UUID, service: PlantService = Depends(get_pla
     photo_stream = await service.get_plant_photo(plant_id)
     if not photo_stream:
         raise HTTPException(status_code=404, detail="Photo not found")
-    return StreamingResponse(photo_stream)
+    return StreamingResponse(photo_stream, media_type="application/octet-stream")
 
 @router.delete("/{plant_id}/photo", response_model=PlantResponse)
 async def delete_photo(plant_id: uuid.UUID, service: PlantService = Depends(get_plant_service)):
